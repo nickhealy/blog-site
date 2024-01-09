@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { marked } from "marked";
 import Handlebars from "handlebars";
 import { OUTPUT_PATH, getOutputPath } from "./fs-utils";
-import { Post, SiteData } from "./data";
+import { SiteData } from "./data";
 
 // @ts-expect-error will fix later
 let blogTemplate;

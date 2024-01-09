@@ -10,7 +10,7 @@
     <ul>
       {{#each postOrder as |post-id|}}
         {{#with (lookup ../posts post-id)}}
-      <li><a href="{{id}}">{{title}}</a></li>
+      <li><a href="{{id}}.html">{{title}}</a></li>
         {{/with}}  
       {{/each}}
     </ul>
