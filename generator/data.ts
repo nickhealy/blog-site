@@ -34,7 +34,7 @@ const getPostData = async (path: string): Promise<Post> => {
 	if (match && match[1] && match[2]) {
 		const metadataString = match[1].trim();
 		const content = match[2].trim();
-		const { date } = parseMetadata(path, metadataString);
+		const { date, tags } = parseMetadata(path, metadataString);
 
 		const splitPath = path.split("/");
 		const title = splitPath[splitPath.length - 1].split(".")[0]; // posts/testing.md -> testing
@@ -43,6 +43,7 @@ const getPostData = async (path: string): Promise<Post> => {
 			content,
 			title,
 			date,
+			tags: tags || [],
 			id: convertToLowerCaseWithHyphens(title),
 		};
 	} else {
