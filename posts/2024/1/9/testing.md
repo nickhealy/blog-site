@@ -1,5 +1,6 @@
 ---
 title: This is a blog post
+date: today
 ---
 
 # A first post

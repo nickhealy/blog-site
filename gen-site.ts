@@ -6,8 +6,10 @@ import {
 	writeFile,
 	unlink,
 } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { marked } from "marked";
+import Handlebars from "handlebars";
 
 const POSTS_DIR = "posts";
 const OUTPUT_PATH = "build";
@@ -72,10 +74,43 @@ const getOutputPath = (name: string) => {
 	return `${OUTPUT_PATH}/${convertToLowerCaseWithHyphens(name)}.html`;
 };
 
-const buildPost = async (title: string, content: string) => {
+// @ts-expect-error will fix later
+let blogTemplate;
+const getBlogTemplate = () => {
+	// @ts-expect-error will fix later
+	if (!blogTemplate) {
+		const template = readFileSync("pages/post.hb.html", { encoding:'utf-8'});
+		blogTemplate = Handlebars.compile(template);
+	}
+	return blogTemplate;
+};
+
+const renderBlogPost = async ({
+	title,
+	date,
+	content,
+}: {
+	title: string;
+	date: string;
+	content: string;
+}) => {
+	const template = getBlogTemplate();
+	return template({ title, date, content: marked(content) });
+};
+
+
+const buildPost = async ({
+	title,
+	date,
+	content,
+}: {
+	title: string;
+	date: string;
+	content: string;
+}) => {
 	const outputPath = getOutputPath(title);
 	console.log("building post: " + title + " to " + outputPath);
-	await writeFile(outputPath, await marked(content));
+	await writeFile(outputPath, await renderBlogPost({ title, content, date }));
 };
 
 const checkBuildDir = async () => {
@@ -96,18 +131,21 @@ const buildBlogPosts = async () => {
 	const promises = [];
 	for (const post of await getAllPosts()) {
 		const { metadata, content } = await parsePostFile(post);
-		const { title } = metadata;
+		const { title, date } = metadata;
 
 		if (!title) {
 			throw new Error(`${post} missing post title`);
 		}
+		if (!date) {
+			throw new Error(`${post} missing date`);
+		}
 
-		promises.push(buildPost(title, content));
+		promises.push(buildPost({ title, date, content }));
 	}
 
 	await Promise.all(promises);
-}
+};
 
 await checkBuildDir();
 await resetBuildDir();
-await buildBlogPosts()
+await buildBlogPosts();
