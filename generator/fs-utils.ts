@@ -1,13 +1,10 @@
 import {
 	readdir,
-	readFile,
 	exists,
 	mkdir,
-	writeFile,
 	unlink,
 } from "node:fs/promises";
 import { join } from "node:path";
-import { readFileSync } from "node:fs";
 
 export const OUTPUT_PATH = "build";
 export const convertToLowerCaseWithHyphens = (input: string) => {

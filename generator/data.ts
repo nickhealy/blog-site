@@ -63,7 +63,7 @@ const byDateDesc = (postA: Post, postB: Post) => {
 	const dateA = new Date(postA.date);
 	const dateB = new Date(postB.date);
 
-	if (dateA < dateB) {
+	if (dateA > dateB) {
 		return -1;
 	} else if (dateA > dateB) {
 		return 1;
