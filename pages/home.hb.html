@@ -1,16 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog homepage</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog homepage</title>
+  </head>
+  <body>
     <h1>Posts</h1>
     <ul>
-      {{#each posts}}
-      <li><a href="{{this.path}}">{{this.title}}</a></li>
+      {{#each postOrder as |post-id|}}
+        {{#with (lookup ../posts post-id)}}
+      <li><a href="{{id}}">{{title}}</a></li>
+        {{/with}}  
       {{/each}}
     </ul>
-</body>
+  </body>
 </html>

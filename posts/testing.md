@@ -1,6 +1,5 @@
 ---
-title: This is a blog post
-date: today
+date: 1-5-2024
 ---
 
 # A first post

@@ -1,6 +1,5 @@
 ---
-title: hello
-date: today
+date: 1-1-2024
 ---
 
 ## this is hello
