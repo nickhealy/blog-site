@@ -13,6 +13,7 @@ import Handlebars from "handlebars";
 
 const POSTS_DIR = "posts";
 const OUTPUT_PATH = "build";
+const SITE_PATH = "Users/nhealy/blog/build/";
 
 const getAllFilesInDirectory = async (dir: string) => {
 	const files: string[] = [];
@@ -79,7 +80,9 @@ let blogTemplate;
 const getBlogTemplate = () => {
 	// @ts-expect-error will fix later
 	if (!blogTemplate) {
-		const template = readFileSync("pages/post.hb.html", { encoding:'utf-8'});
+		const template = readFileSync("pages/post.hb.html", {
+			encoding: "utf-8",
+		});
 		blogTemplate = Handlebars.compile(template);
 	}
 	return blogTemplate;
@@ -97,7 +100,6 @@ const renderBlogPost = async ({
 	const template = getBlogTemplate();
 	return template({ title, date, content: marked(content) });
 };
-
 
 const buildPost = async ({
 	title,
@@ -127,6 +129,21 @@ const resetBuildDir = async () => {
 	}
 };
 
+const buildHomepage = async () => {
+	const posts = [];
+	for (const post of await getAllPosts()) {
+		const { metadata } = await parsePostFile(post);
+		const { title } = metadata;
+		posts.push({ title, path: `${convertToLowerCaseWithHyphens(title)}.html` });
+	}
+	const template = readFileSync("pages/home.hb.html", {
+		encoding: "utf-8",
+	});
+	const homeTemplate = Handlebars.compile(template);
+
+	await writeFile(`${OUTPUT_PATH}/home.html`, homeTemplate({ posts }));
+};
+
 const buildBlogPosts = async () => {
 	const promises = [];
 	for (const post of await getAllPosts()) {
@@ -148,4 +165,5 @@ const buildBlogPosts = async () => {
 
 await checkBuildDir();
 await resetBuildDir();
+await buildHomepage()
 await buildBlogPosts();
