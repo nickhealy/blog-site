@@ -14,5 +14,6 @@ console.log(siteData);
 await Promise.all([
 	await buildHomepage(siteData),
 	await buildBlogPosts(siteData),
+	// also generate the css
 ]);
 
